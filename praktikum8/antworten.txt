@@ -1,0 +1,8 @@
+1. Welchem HTML-Element entspricht der blaue Kreis und
+welche CSS-Eigenschaften werden für seine Darstellung verwendet?
+Das "div" mit der class "piece" stellt den Kreis dar, um die Kreisform zu erreichen
+verwendet man "border-radius"
+
+2. Wie wird erreicht, dass sich die Grösse des Spielfelds an der
+Grösse des Viewports orientiert?
+Indem man als Einheit für die Grösse "vw" verwendet
