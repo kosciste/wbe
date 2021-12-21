@@ -2,15 +2,27 @@ window.onload = () => {
   initBoard();
   document.querySelectorAll('.field').forEach(element => {
     element.addEventListener('click', function(event){
-      let fieldID = event.currentTarget.id;
-      makeTurn(fieldID);
-      updateBoard();
-      document.getElementById("currentPlayer").innerHTML = currentPlayer;
+      if(running){
+        let fieldID = event.currentTarget.id;
+        makeTurn(fieldID);
+        updateBoard();
+        let winner = checkForWinner();
+        if (winner!==''){
+          document.getElementById("info").innerHTML="Der Gewinner ist";
+          running = false;
+        } else{
+          changeCurrentPlayer();
+          document.getElementById("currentPlayer").innerHTML = currentPlayer;
+        }
+        
+      }
     })
   });
   document.getElementById("button").addEventListener('click', ()=>{
     clearField();
     currentPlayer = players[0];
+    saveState();
+    running = true;
   })
   document.getElementById("load").addEventListener('click', ()=>{
     loadState();
@@ -20,9 +32,11 @@ window.onload = () => {
   })
 }
 
+const SERVICE = "http://localhost:3000/api/data/state?api-key=c4game"
 
 let players = ["blue", "red"];
 let currentPlayer = players[0];
+let running = true;
 
 let state = [
     [ '', '', '', '', '', '', '' ],
@@ -39,7 +53,6 @@ function makeTurn(fieldID){
     if(state[i][col]===''&&!found){
       state[i][col]=currentPlayer.charAt(0);
       found = true;
-      changeCurrentPlayer();
     }
   }
 }
@@ -110,3 +123,65 @@ function initBoard(){
 }
 
 
+function loadState () {
+  fetch(SERVICE, { 
+    method: 'GET', 
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+    state = data;
+    updateBoard();
+  })
+  
+}
+
+
+function saveState () {
+  fetch(SERVICE, { 
+    method: 'PUT', 
+    headers: { 'Content-type': 'application/json' }, 
+    body: JSON.stringify(state) 
+  })
+}
+
+function checkLine(a,b,c,d) {
+  return ((a != 0) && (a ==b) && (a == c) && (a == d));
+}
+
+function checkForWinner() {
+  let winner = '';
+  for (let i = 0; i < 3; i++){
+    for (let j = 0; j < 7; j++){
+      if (checkLine(state[i][j], state[i+1][j], state[i+2][j], state[i+3][j])){
+        winner = state[i][j];
+      }
+    }
+  }
+         
+  for (i = 0; i < 6; i++){
+    for (j = 0; j < 4; j++){
+      if (checkLine(state[i][j], state[i][j+1], state[i][j+2], state[i][j+3])){
+        winner = state[i][j];
+      }         
+    }     
+  }
+      
+  for (i = 0; i < 3; i++){
+    for (j = 0; j < 4; j++){
+      if (checkLine(state[i][j], state[i+1][j+1], state[i+2][j+2], state[i+3][j+3])){
+        winner = state[i][j];
+      }            
+    }       
+  }
+      
+  for (i = 3; i < 6; i++){
+    for (j = 0; j < 4; j++){
+      if (checkLine(state[i][j], state[i-1][j+1], state[i-2][j+2], state[i-3][j+3])){
+        winner = state[i][j];
+      }  
+    }
+  }
+  return winner;
+
+}

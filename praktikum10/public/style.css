@@ -1,0 +1,66 @@
+
+    .board div {
+      box-sizing: border-box;
+    }
+
+    .container{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-content: stretch;
+    }
+
+    #main{
+        width: 84vw;
+        margin: auto;
+    }
+
+    .item {
+        width: 50%;
+        height: 100px;
+        text-align: center!important;
+    }
+
+
+    #button{
+        height: 60px;
+        border: 3px solid black;
+        text-align: center;
+    }
+
+    .row {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .board {
+      outline: 1px solid black;
+   }
+
+    .board .field {
+      border: 1px solid black;
+      width: 12vw;
+      height: 12vw;
+      display: block;
+    }
+
+    .board .field .piece {
+      width: 10vw;
+      height: 10vw;
+      border-radius: 50%;
+      margin: 1vw;
+    }
+    .board .field .blue {
+      background-color: blue;
+    }
+    .board .field .red {
+      background-color: red;
+    }
+
+    .controls {
+      text-align: center;
+    }
+    .controls button {
+      font-size: 1.5rem;
+      margin-top: 1rem;
+    }
